@@ -5,6 +5,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import store from './store'
 import http from './utils/http'
+import '@/assets/css/global.css'
 
 Vue.prototype.$axios = http
 

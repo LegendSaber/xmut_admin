@@ -5,11 +5,15 @@
         <img src="@/assets/images/header.png"/>
         <span style="margin-left: 15px;">后台管理系统</span>
       </div>
-      <el-button type="info" @click="logout">退出</el-button>
+      <div>
+        <span style="margin-right: 5px;">欢迎你，{{currentUser.name}}</span>
+        <el-button type="primary" @click="home">主页</el-button>
+        <el-button type="info" @click="logout">退出</el-button>
+      </div>
     </el-header>
     <el-container>
-      <el-aside :width="$refs.menuWidth.$data.isCollapse ? '64px' : '200px'">
-        <origin-menu ref="menuWidth"></origin-menu>
+      <el-aside :width="isCollapse ? '64px' : '200px'">
+        <origin-menu @changeCollapse="newCollapse"></origin-menu>
       </el-aside>
       <el-main>
         <origin-main></origin-main>
@@ -23,7 +27,10 @@ import menu from "./module/menu";
 import main from "./module/main";
 export default {
   data() {
-    return {};
+    return {
+      isCollapse: true,
+      currentUser: {}
+    };
   },
   components: {
     "origin-menu": menu,
@@ -38,6 +45,20 @@ export default {
           this.$router.push("/")
         } 
       })
+    },
+    newCollapse(isCollapse) {
+      this.$data.isCollapse = isCollapse
+    },
+    home() {
+      if (this.$route.path != '/dashbord') this.$router.push("/dashbord")
+    }
+  },
+  created() {
+    let currentUser = JSON.parse(window.sessionStorage.getItem("admin")) 
+    if (currentUser) {
+      this.$data.currentUser = currentUser
+    }else {
+      this.$router.push('/')
     }
   }
 };

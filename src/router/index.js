@@ -28,6 +28,46 @@ export default new Router({
                 component: () =>
                     import ("../views/dashbord/index")
             }]
+        },
+        {
+            path: '/user',
+            name: 'User',
+            component: layout,
+            children: [{
+                path: '/',
+                component: () =>
+                    import ("../views/sys/user/index")
+            }]
+        },
+        {
+            path: '/experience',
+            name: 'Experience',
+            component: layout,
+            children: [{
+                path: '/',
+                component: () =>
+                    import ("../views/sys/experience/index")
+            }]
+        },
+        {
+            path: '/exdetail',
+            name: 'ExperienceDetail',
+            component: layout,
+            children: [{
+                path: '/',
+                component: () =>
+                    import ("../views/sys/experience/detail/index")
+            }]
+        },
+        {
+            path: '/knowledge',
+            name: 'Knowledge',
+            component: layout,
+            children: [{
+                path: '/',
+                component: () =>
+                    import ("../views/sys/knowledge/index")
+            }]
         }
     ]
 })
