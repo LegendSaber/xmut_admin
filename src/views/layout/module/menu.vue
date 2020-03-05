@@ -67,7 +67,7 @@ export default {
       if (index == "1") {
         
       } else if (index == "2-1") {
-        
+        if (this.$route.path != "/admin") this.$router.push("/admin")
       } else if (index == "2-2") {
         if (this.$route.path != "/user") this.$router.push("/user")
       } else if (index == "3-1"){
@@ -75,7 +75,7 @@ export default {
       } else if (index == "3-2"){
         if (this.$route.path != "/knowledge") this.$router.push("/knowledge")
       } else if (index == "3-3"){
-
+        if (this.$route.path != "/file") this.$router.push("/file")  
       }
     }
   }

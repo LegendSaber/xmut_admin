@@ -68,6 +68,33 @@ export default new Router({
                 component: () =>
                     import ("../views/sys/knowledge/index")
             }]
+        },
+        {
+            path: '/kndetail',
+            component: layout,
+            children: [{
+                path: '/',
+                component: () =>
+                    import ("../views/sys/knowledge/detail/index")
+            }]
+        },
+        {
+            path: '/file',
+            component: layout,
+            children: [{
+                path: '/',
+                component: () =>
+                    import ("../views/sys/file/index")
+            }]
+        },
+        {
+            path: '/admin',
+            component: layout,
+            children: [{
+                path: '/',
+                component: () =>
+                    import ("../views/sys/admin/index")
+            }]
         }
     ]
 })

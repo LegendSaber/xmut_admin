@@ -6,14 +6,31 @@
       <div class="author-info">
         <el-button type="primary" plain style="fontSize:14px;">{{essay.author}}</el-button>
         <el-divider direction="vertical"></el-divider>
+        <el-button type="success" plain style="fontSize:14px;">{{essay.category}}</el-button>
+        <el-divider direction="vertical"></el-divider>
         <span style="fontSize:18px;">发表于: {{essay.createTime}}</span>
         <el-divider direction="vertical"></el-divider>
         <span>收藏人数: {{essay.favorNum}}</span>
       </div>
       <el-divider />
       <div v-html="essay.content" style="fontSize:20px;"></div>
+      <div v-if="images.length > 0">
+        <el-divider />
+        <img
+          v-for="(image, index) in images"
+          :alt="image.name"
+          :key="index"
+          :src="image.img"
+          width="304"
+          height="228"
+          @click="showImg(index)"
+        />
+        <el-dialog :visible.sync="bigImg.dialogVisible">
+          <img width="100%" :src="bigImg.dialogImageUrl" alt />
+        </el-dialog>
+      </div>
       <el-divider />
-      <el-button @click="deteleExperience" icon="el-icon-delete" type="danger" plain>删除</el-button>
+      <el-button @click="deteleKnowledge" icon="el-icon-delete" type="danger" plain>删除</el-button>
       <el-divider />
       <el-tabs type="card" v-model="cardForm.category" @tab-click="commentHandleClick">
         <el-tab-pane label="最新" name="new"></el-tab-pane>
@@ -33,10 +50,6 @@
               <span>发表于: {{comment.createTime}}</span>
               <el-divider direction="vertical"></el-divider>
               <span>推荐人数: {{comment.favorNum}}</span>
-              <el-divider direction="vertical"></el-divider>
-              <el-link type="warning">推荐</el-link>
-              <el-divider direction="vertical"></el-divider>
-              <el-link type="danger">回复</el-link>
             </div>
           </el-col>
           <el-col>
@@ -77,6 +90,11 @@ export default {
         "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
       essay: {},
       commentData: [],
+      images: [],
+      bigImg: {
+        dialogImageUrl: "",
+        dialogVisible: false
+      },
       cardForm: {
         category: "new",
         oldCategory: "new"
@@ -91,7 +109,11 @@ export default {
   },
   methods: {
     goBack() {
-        this.$router.push("/experience")
+      this.$router.push("/knowledge");
+    },
+    showImg(index) {
+      this.$data.bigImg.dialogImageUrl = this.$data.images[index].img;
+      this.$data.bigImg.dialogVisible = true;
     },
     getComment() {
       let params = {};
@@ -100,55 +122,60 @@ export default {
       params.id = this.$data.essay.id;
       params.flag = this.$data.queryComment.flag;
 
-      this.$axios.post("/sysComment/getAll", params).then(response => {
-        if (response && response.success) {
-          if (response.data == null) {
-            window.removeEventListener("scroll", this.windowScroll);
-            return;
-          }
-          if (!this.$data.queryComment.isScroll) {
-            this.$data.commentData = response.data.records;
-            let len = this.$data.commentData.length;
-            for (let i = 0; i < len; i++) {
-              this.$data.commentData[i].createTime = this.$data.commentData[
-                i
-              ].createTime.slice(0, 10);
-              this.$data.commentData[i].sonComment.sort(function sortFun(x, y) {
-                return Date.parse(y.createTime) - Date.parse(x.createTime);
-              });
-              let sonLen = this.$data.commentData[i].sonComment.length;
-              for (let j = 0; j < sonLen; j++) {
-                this.$data.commentData[i].sonComment[
-                  j
-                ].createTime = this.$data.commentData[i].sonComment[
-                  j
+      this.$axios
+        .post("/sysComment/getKnowledgeComment", params)
+        .then(response => {
+          if (response && response.success) {
+            if (response.data == null) {
+              window.removeEventListener("scroll", this.windowScroll);
+              return;
+            }
+            if (!this.$data.queryComment.isScroll) {
+              this.$data.commentData = response.data.records;
+              let len = this.$data.commentData.length;
+              for (let i = 0; i < len; i++) {
+                this.$data.commentData[i].createTime = this.$data.commentData[
+                  i
                 ].createTime.slice(0, 10);
+                this.$data.commentData[i].sonComment.sort(function sortFun(
+                  x,
+                  y
+                ) {
+                  return Date.parse(y.createTime) - Date.parse(x.createTime);
+                });
+                let sonLen = this.$data.commentData[i].sonComment.length;
+                for (let j = 0; j < sonLen; j++) {
+                  this.$data.commentData[i].sonComment[
+                    j
+                  ].createTime = this.$data.commentData[i].sonComment[
+                    j
+                  ].createTime.slice(0, 10);
+                }
               }
-            }
 
-            if (len < this.$data.queryComment.pageSize) {
-              window.removeEventListener("scroll", this.windowScroll);
-            }
-          } else {
-            let tmp = response.data.records;
-            let len = tmp.length;
-            if (len == 2) {
-              tmp[0].createTime = tmp[0].createTime.slice(0, 10);
-              tmp[1].createTime = tmp[1].createTime.slice(0, 10);
-              this.$data.commentData.push(tmp[0]);
-              this.$data.commentData.push(tmp[1]);
-              this.$data.queryComment.currentPage++;
-            } else {
-              if (len == 1) {
-                tmp[0].createTime = tmp[0].createTime.slice(0, 10);
-                this.$data.commentData.push(tmp[0]);
+              if (len < this.$data.queryComment.pageSize) {
+                window.removeEventListener("scroll", this.windowScroll);
               }
-              this.$notify.error("没有更多数据了");
-              window.removeEventListener("scroll", this.windowScroll);
+            } else {
+              let tmp = response.data.records;
+              let len = tmp.length;
+              if (len == 2) {
+                tmp[0].createTime = tmp[0].createTime.slice(0, 10);
+                tmp[1].createTime = tmp[1].createTime.slice(0, 10);
+                this.$data.commentData.push(tmp[0]);
+                this.$data.commentData.push(tmp[1]);
+                this.$data.queryComment.currentPage++;
+              } else {
+                if (len == 1) {
+                  tmp[0].createTime = tmp[0].createTime.slice(0, 10);
+                  this.$data.commentData.push(tmp[0]);
+                }
+                this.$notify.error("没有更多数据了");
+                window.removeEventListener("scroll", this.windowScroll);
+              }
             }
           }
-        }
-      });
+        });
     },
     commentHandleClick() {
       if (this.$data.cardForm.category != this.$data.cardForm.oldCategory) {
@@ -166,7 +193,7 @@ export default {
         window.addEventListener("scroll", this.windowScroll);
       }
     },
-    deteleExperience() {
+    deteleKnowledge() {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -177,18 +204,16 @@ export default {
         params.id = this.$data.essay.id;
         params.author = this.$data.essay.author
 
-        this.$axios
-          .post("/sysExperience/deleteExperienceByAdmin", params)
-          .then(response => {
-            if (response && response.success) {
-              this.$alert(response.message, "删除结果", {
-                confirmButtonText: "确定",
-                callback: action => {
-                  this.$router.push("/experience");
-                }
-              });
-            }
-          });
+        this.$axios.post("/sysKnowledge/deleteByAdmin", params).then(response => {
+          if (response && response.success) {
+            this.$alert(response.message, "删除结果", {
+              confirmButtonText: "确定",
+              callback: action => {
+                this.$router.push("/knowledge");
+              }
+            });
+          }
+        });
       });
     },
     windowScroll() {
@@ -219,35 +244,54 @@ export default {
   },
   created() {
     if (window.sessionStorage.getItem("essay_id") == null) this.goBack();
-    let essayParams = {}
+    let essayParams = {};
+    essayParams.id = window.sessionStorage.getItem("essay_id");
 
-    essayParams.id = window.sessionStorage.getItem("essay_id")
-    this.$axios.post("/sysExperience/getExperienceById", essayParams).then(response => {
-      if (response && response.success) {
-        this.$data.essay = response.data
-        this.$data.essay.createTime = this.$data.essay.createTime.slice(0, 10)
-        let params = {};
-        params.id = this.$data.essay.id;
+    this.$axios
+      .post("/sysKnowledge/getKnowledgeById", essayParams)
+      .then(response => {
+        if (response && response.success) {
+          this.$data.essay = response.data;
+          this.$data.essay.createTime = this.$data.essay.createTime.slice(
+            0,
+            10
+          );
+          let params = {};
+          params.id = this.$data.essay.id;
 
-        this.getComment();
-        this.$data.queryComment.currentPage =
-          this.$data.queryComment.pageSize / 2 + 1;
-        this.$data.queryComment.pageSize = 2;
-      }else {
-        this.$notify.error(response.message)
-        this.$router.push("/experience")
-      }
-    })
+          this.getComment();
+          this.$data.queryComment.currentPage =
+            this.$data.queryComment.pageSize / 2 + 1;
+          this.$data.queryComment.pageSize = 2;
+
+          this.$axios.post("/sysFile/loadPicture", params).then(response => {
+            if (response && response.success) {
+              let data = response.data;
+              let length = data.length;
+
+              for (let i = 0; i < length; i++) {
+                let picture = {};
+                picture.name = data[i].name;
+                picture.img = data[i].img;
+                this.$data.images.push(picture);
+              }
+            }
+          });
+        } else {
+          this.$notify.error(response.message);
+          this.$router.push("/knowledge");
+        }
+      });
   },
   mounted() {
     window.addEventListener("scroll", this.windowScroll);
   },
   beforeDestroy() {
     window.removeEventListener("scroll", this.windowScroll);
-    window.sessionStorage.removeItem("essay_id")
+    window.sessionStorage.removeItem("essay_id");
   }
 };
 </script>
 
-<style scoped>
+<style>
 </style>

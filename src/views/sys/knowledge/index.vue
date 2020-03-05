@@ -40,7 +40,7 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="查看" placement="right-start" :enterable="false">
-              <el-button type="warning" @click="show(scope.row)" icon="el-icon-setting"></el-button>
+              <el-button type="primary" @click="show(scope.row.id)" icon="el-icon-zoom-in"></el-button>
             </el-tooltip>
             <el-button @click="deleteKnowledge(scope.row)" type="danger" icon="el-icon-delete"></el-button>
           </template>
@@ -116,7 +116,7 @@ export default {
       params.author = row.author;
 
       this.$axios
-        .post("/sysKnowledge/deleteKnowledgeByAdmin", params)
+        .post("/sysKnowledge/deleteByAdmin", params)
         .then(response => {
           if (response && response.success) {
             this.$alert(response.message, "提交结果", {
@@ -136,8 +136,9 @@ export default {
       this.$data.queryInfo.currentPage = newPage;
       this.getKnowledgeList();
     },
-    show(row) {
-        this.$router.push({ path: "/kndetail", query: { content: row } });
+    show(id) {
+        window.sessionStorage.setItem("essay_id", id)
+        this.$router.push("/kndetail");
     }
   }
 };
