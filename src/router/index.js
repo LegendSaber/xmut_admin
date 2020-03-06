@@ -95,6 +95,15 @@ export default new Router({
                 component: () =>
                     import ("../views/sys/admin/index")
             }]
+        },
+        {
+            path: '/sign',
+            component: layout,
+            children: [{
+                path: '/',
+                component: () =>
+                    import ("../views/sys/sign/index")
+            }]
         }
     ]
 })

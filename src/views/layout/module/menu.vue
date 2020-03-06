@@ -20,7 +20,7 @@
           <i class="el-icon-s-data"></i>
           <span>账户管理</span>
         </template>
-        <el-menu-item index="2-1">
+        <el-menu-item v-if="isSuperAdmin" index="2-1">
           <i class="el-icon-s-check"></i>
           <span slot="title">管理人员</span>
         </el-menu-item>
@@ -55,8 +55,12 @@
 export default {
   data() {
     return {
-      isCollapse: true
+      isCollapse: true,
+      isSuperAdmin: false 
     };
+  },
+  created(){
+    if (JSON.parse(window.sessionStorage.getItem("admin")).roleName === "超级管理员") this.$data.isSuperAdmin = true
   },
   methods: {
     toggleCollapse() {
@@ -65,7 +69,7 @@ export default {
     },
     handleSelect(index, indexPath) {
       if (index == "1") {
-        
+        if (this.$route.path != "/sign") this.$router.push("/sign")
       } else if (index == "2-1") {
         if (this.$route.path != "/admin") this.$router.push("/admin")
       } else if (index == "2-2") {
