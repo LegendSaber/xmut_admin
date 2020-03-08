@@ -81,6 +81,7 @@ export default {
 
 .el-main {
   background-color: #EAEDF1;
+  background: url("../../assets/images/main.jpg");
 }
 
 .home-container {

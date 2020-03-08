@@ -1,6 +1,5 @@
 <template>
   <div>
-    <el-page-header @back="goBack" content="详情页面"></el-page-header>
     <el-card class="box-card">
       <h1 style="fontSize:30px;">{{essay.title}}</h1>
       <div class="author-info">
@@ -90,9 +89,6 @@ export default {
     };
   },
   methods: {
-    goBack() {
-        this.$router.push("/experience")
-    },
     getComment() {
       let params = {};
       params.currentPage = this.$data.queryComment.currentPage;

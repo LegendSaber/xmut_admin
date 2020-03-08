@@ -9,6 +9,7 @@ body,
 .el-breadcrumb {
     margin-bottom: 15px;
     font-size: 12px;
+    color: #fff;
 }
 
 .el-card {
