@@ -40,7 +40,7 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-tooltip effect="dark" content="查看" placement="right-start" :enterable="false">
-              <el-button type="primary" @click="show(scope.row.id)" icon="el-icon-zoom-in"></el-button>
+              <a :href="'kndetail?id=' + scope.row.id"><el-button type="primary" icon="el-icon-zoom-in"></el-button></a>
             </el-tooltip>
             <el-button @click="deleteKnowledge(scope.row)" type="danger" icon="el-icon-delete"></el-button>
           </template>
@@ -135,10 +135,6 @@ export default {
     handleCurrentChange(newPage) {
       this.$data.queryInfo.currentPage = newPage;
       this.getKnowledgeList();
-    },
-    show(id) {
-        window.sessionStorage.setItem("essay_id", id)
-        this.$router.push("/kndetail");
     }
   }
 };

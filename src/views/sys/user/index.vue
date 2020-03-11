@@ -30,9 +30,6 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-tooltip effect="dark" content="查看" placement="right-start" :enterable="false">
-              <el-button type="warning" icon="el-icon-setting"></el-button>
-            </el-tooltip>
             <el-button @click="showEditDialog(scope.row)" type="primary" icon="el-icon-edit"></el-button>
           </template>
         </el-table-column>

@@ -2,19 +2,20 @@
   <div>
     <el-card class="box-card">
       <h1 style="fontSize:30px;">{{essay.title}}</h1>
-      <div class="author-info">
-        <el-button type="primary" plain style="fontSize:14px;">{{essay.author}}</el-button>
-        <el-divider direction="vertical"></el-divider>
-        <el-button type="success" plain style="fontSize:14px;">{{essay.category}}</el-button>
-        <el-divider direction="vertical"></el-divider>
-        <span style="fontSize:18px;">发表于: {{essay.createTime}}</span>
-        <el-divider direction="vertical"></el-divider>
-        <span>收藏人数: {{essay.favorNum}}</span>
-      </div>
+    <div class="author-info">
+      <el-button type="primary" style="fontSize:12px;">{{essay.author}}</el-button>
+      <el-divider direction="vertical"></el-divider>
+      <el-button type="success" style="fontSize:12px;">{{essay.category}}</el-button>
+      <el-divider direction="vertical"></el-divider>
+      <span>发表于: {{essay.createTime}}</span>
+      <el-divider direction="vertical"></el-divider>
+      <span>收藏人数: {{essay.favorNum}}</span>
+    </div>
+    <el-divider />
+    <div v-html="essay.content" style="fontSize:20px;"></div>
+    <el-row v-if="images.length > 0">
       <el-divider />
-      <div v-html="essay.content" style="fontSize:20px;"></div>
-      <div v-if="images.length > 0">
-        <el-divider />
+      <el-col>
         <img
           v-for="(image, index) in images"
           :alt="image.name"
@@ -22,13 +23,15 @@
           :src="image.img"
           width="304"
           height="228"
+          style="margin-left: 24px;"
           @click="showImg(index)"
         />
         <el-dialog :visible.sync="bigImg.dialogVisible">
           <img width="100%" :src="bigImg.dialogImageUrl" alt />
         </el-dialog>
-      </div>
-      <el-divider />
+      </el-col>
+    </el-row>
+    <el-divider />
       <el-button @click="deteleKnowledge" icon="el-icon-delete" type="danger" plain>删除</el-button>
       <el-divider />
       <el-tabs type="card" v-model="cardForm.category" @tab-click="commentHandleClick">
@@ -36,45 +39,51 @@
         <el-tab-pane label="热门" name="hot"></el-tab-pane>
       </el-tabs>
       <div v-for="(comment, index) in commentData" :key="index">
+      <el-row>
+        <el-col :span="1" :offset="1">
+          <el-avatar v-if="comment.img == null" shape="square" :size="50" :src="squareUrl"></el-avatar>
+          <el-avatar v-else shape="square" :size="50" :src="comment.img"></el-avatar>
+        </el-col>
+        <el-col :span="19">
+          <div style="fontSize: 16px;" v-html="comment.content"></div>
+          <div class="comment">
+            <span style="color:#3b5998;cursor: pointer;" type="primary">{{comment.author}}</span>
+            <el-divider direction="vertical"></el-divider>
+            <span>发表于: {{comment.createTime}}</span>
+            <el-divider direction="vertical"></el-divider>
+            <span>推荐人数: {{comment.favorNum}}</span>
+          </div>
+        </el-col>
+      </el-row>
+      <div v-for="(son, index) in comment.sonComment" :key="index">
         <el-row>
-          <el-col :span="1" :offset="1">
-            <el-avatar shape="square" :size="50" :src="squareUrl"></el-avatar>
-          </el-col>
-          <el-col :span="19" :offset="1">
-            <div style="fontSize: 20px;" v-html="comment.content"></div>
-            <br />
-            <div style="fontSize:10px;">
-              <el-link type="primary">{{comment.author}}</el-link>
-              <el-divider direction="vertical"></el-divider>
-              <span>发表于: {{comment.createTime}}</span>
-              <el-divider direction="vertical"></el-divider>
-              <span>推荐人数: {{comment.favorNum}}</span>
-            </div>
-          </el-col>
-          <el-col>
-            <el-divider />
+          <el-col :offset="2">
+            <el-divider>
+              <i class="el-icon-s-comment"></i>
+            </el-divider>
           </el-col>
         </el-row>
-        <div v-for="(son, index) in comment.sonComment" :key="index">
-          <el-row>
-            <el-col :span="1" :offset="2">
-              <el-avatar :size="50" :src="circleUrl"></el-avatar>
-            </el-col>
-            <el-col :span="20" :offset="1">
-              <div style="fontSize: 15px;" v-html="son.content"></div>
-              <br />
-              <div style="fontSize: 10px;">
-                <el-link type="success">{{son.author}}</el-link>
-                <el-divider direction="vertical"></el-divider>
-                <span>回复于: {{son.createTime}}</span>
-              </div>
-            </el-col>
-            <el-col>
-              <el-divider />
-            </el-col>
-          </el-row>
-        </div>
+        <el-row>
+          <el-col :span="6" :offset="2">
+            <div style="fontSize: 16px;" v-html="son.content"></div>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :offset="2" :span="5">
+            <div style="margin-top:10px;fontSize: 14px;">
+              <el-link type="success">{{son.author}}</el-link>
+              <el-divider direction="vertical"></el-divider>
+              <span>回复于: {{son.createTime}}</span>
+            </div>
+          </el-col>
+        </el-row>
       </div>
+      <el-row>
+        <el-divider>
+          <i class="el-icon-s-data"></i>
+        </el-divider>
+      </el-row>
+    </div>
     </el-card>
   </div>
 </template>
@@ -83,8 +92,6 @@
 export default {
   data() {
     return {
-      circleUrl:
-        "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
       squareUrl:
         "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
       essay: {},
@@ -119,7 +126,7 @@ export default {
       params.flag = this.$data.queryComment.flag;
 
       this.$axios
-        .post("/sysComment/getKnowledgeComment", params)
+        .get("/sysComment/getKnowledgeComment", params)
         .then(response => {
           if (response && response.success) {
             if (response.data == null) {
@@ -239,9 +246,8 @@ export default {
     }
   },
   created() {
-    if (window.sessionStorage.getItem("essay_id") == null) this.goBack();
     let essayParams = {};
-    essayParams.id = window.sessionStorage.getItem("essay_id");
+    essayParams.id = this.$route.query.id;;
 
     this.$axios
       .post("/sysKnowledge/getKnowledgeById", essayParams)
@@ -284,10 +290,27 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener("scroll", this.windowScroll);
-    window.sessionStorage.removeItem("essay_id");
   }
 };
 </script>
 
-<style>
+<style scoped>
+.comment {
+  line-height: 1.6;
+  margin-bottom: 6px;
+  font-size: 14px;
+  margin-top: 8px;
+}
+span {
+  color: #767676;
+}
+
+img {
+  margin: 5px;
+  border: 1px solid #ccc;
+}
+
+img:hover {
+  border: 1px solid #777;
+}
 </style>

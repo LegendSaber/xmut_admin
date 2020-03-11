@@ -7,8 +7,8 @@
       </div>
       <div>
         <span style="margin-right: 5px;">欢迎你，{{currentUser.name}}</span>
-        <el-button type="primary" @click="home">主页</el-button>
-        <el-button type="info" @click="logout">退出</el-button>
+        <el-button icon="el-icon-s-home" type="primary" @click="home">主页</el-button>
+        <el-button icon="el-icon-s-release" type="info" @click="logout">退出</el-button>
       </div>
     </el-header>
     <el-container>
