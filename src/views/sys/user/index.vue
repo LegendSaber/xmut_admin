@@ -233,7 +233,7 @@ export default {
         } else {
           let params = {};
           params.username = this.$data.addForm.username;
-          params.password = this.$data.addForm.password;
+          params.password = this.$md5(this.$data.addForm.password + "_XmUt");
           params.roleName = this.$data.addForm.value;
 
           this.$axios.post("/sysUser/register", params).then(response => {

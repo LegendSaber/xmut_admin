@@ -72,8 +72,8 @@ export default {
         if (valid) {
           var params = {}
           params.name = this.$data.ruleLogin.username
-          params.password = this.$data.ruleLogin.password
-
+          params.password = this.$md5(this.$data.ruleLogin.password + "_XmUt")
+         
           this.$axios.get('/sysAdmin/login',params).then((response) => {
             if(response && response.success){
               // 设置用户登录信息

@@ -10,7 +10,7 @@
         <span>收藏人数: {{essay.favorNum}}</span>
       </div>
       <el-divider />
-      <div v-html="essay.content" style="fontSize:20px;"></div>
+      <div v-html="$xss(essay.content)" style="fontSize:20px;"></div>
       <el-divider />
       <el-button @click="deteleExperience" icon="el-icon-delete" type="danger" plain>删除</el-button>
       <el-divider />
@@ -25,7 +25,7 @@
             <el-avatar v-else shape="square" :size="50" :src="comment.img"></el-avatar>
           </el-col>
           <el-col :span="19">
-            <div style="fontSize: 16px;" v-html="comment.content"></div>
+            <div style="fontSize: 16px;" v-html="$xss(comment.content)"></div>
             <div class="comment">
               <span style="color:#3b5998;cursor: pointer;" type="primary">{{comment.author}}</span>
               <el-divider direction="vertical"></el-divider>
@@ -45,7 +45,7 @@
           </el-row>
           <el-row>
             <el-col :span="6" :offset="2">
-              <div style="fontSize: 16px;" v-html="son.content"></div>
+              <div style="fontSize: 16px;" v-html="$xss(son.content)"></div>
             </el-col>
           </el-row>
           <el-row>

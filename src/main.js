@@ -9,8 +9,12 @@ import 'element-ui/lib/theme-chalk/index.css'
 import store from './store'
 import http from './utils/http'
 import '@/assets/css/global.css'
+import xss from 'xss'
+import md5 from 'js-md5'
 
 Vue.prototype.$axios = http
+Vue.prototype.$xss = xss
+Vue.prototype.$md5 = md5
 
 Vue.config.productionTip = false
 
