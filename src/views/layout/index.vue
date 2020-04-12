@@ -42,6 +42,7 @@ export default {
         if (response && response.success) {
           this.$notify.success(response.message)
           window.sessionStorage.removeItem("admin")
+          window.sessionStorage.removeItem("token")
           this.$router.push("/")
         } 
       })

@@ -74,11 +74,11 @@ export default {
           params.name = this.$data.ruleLogin.username
           params.password = this.$md5(this.$data.ruleLogin.password + "_XmUt")
          
-          this.$axios.get('/sysAdmin/login',params).then((response) => {
+          this.$axios.get('/sysAdmin/login', params).then((response) => {
             if(response && response.success){
               // 设置用户登录信息
-              window.sessionStorage.setItem("admin", JSON.stringify(response.data))
-
+              window.sessionStorage.setItem("admin", JSON.stringify(response.data.admin))
+              window.sessionStorage.setItem("token", response.data.token)
               //跳转路由
               this.$router.push('/dashbord')
               this.$notify.success(response.message)

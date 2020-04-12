@@ -15,6 +15,14 @@ axiosIns.interceptors.request.use(config => {
         'X-Requested-With': 'XMLHttpRequest',
         'Content-Type': 'application/x-www-form-urlencoded'
     })
+
+    let token = window.sessionStorage.getItem("token")
+
+    if (token) {
+        config.headers = Object.assign(config.headers, {
+            'token': token
+        })
+    }
     config.data = qs.stringify(config.data)
 
     return config

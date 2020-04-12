@@ -76,11 +76,17 @@ export default {
           value: "作者",
           label: "作者"
         }
-      ]
+      ],
+      token: ""
     };
   },
   created() {
     this.getFileList();
+    let token = window.sessionStorage.getItem("token")
+
+    if (token){
+      this.$data.token = token
+    }
   },
   methods: {
     getFileList() {
@@ -113,7 +119,7 @@ export default {
       this.getFileList();
     },
     download(id) {
-      window.open("http://localhost:8888/xmut/sysFile/download?id=" + id);
+      window.open("http://localhost:8888/xmut/sysFile/download?id=" + id + "&token=" + this.$data.token);
     },
     deleteFile(row) {
       let params = {};
